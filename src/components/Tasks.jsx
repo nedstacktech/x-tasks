@@ -1,42 +1,121 @@
-import { Box, Stack, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Stack,
+  Flex,
+  Heading,
+  Text,
+  Link,
+  Img,
+  Grid,
+} from "@chakra-ui/react";
 
 import React from "react";
-
+import {FaXTwitter} from "react-icons/fa6";
 export default function Tasks({ title, isCentered }) {
   return (
-    <Box>
-      <h1>Current tasks</h1>
+    <Flex maxW="75rem" mx="auto" py="3rem" justifyContent={"space-between"}>
+      {/* <h1>Current tasks</h1> */}
       <script
         type="text/javascript"
         async
         src="https://platform.twitter.com/widgets.js"
       ></script>
+      <Box>
+      
+      <Heading
+        as="h2"
+        fontSize={"4rem"}
+        color={"black"}
+        fontWeight={"semibold"}
+      >
+        <Text color={"brand.100"}>Bridge Token</Text>
+        Engagement Airdrop
+      </Heading>
+      <Text
+        color={"rgb(100,100,100)"}
+        fontWeight={"semibold"}
+        fontSize={"1.5rem"}
+        mt="5"
+      >
+        Earn rewards for engaging.
+      </Text>
+      <Grid
+        gridTemplateColumns={"repeat(2,1fr)"}
+        // fontWeight={"semibold"}
+        gap="4"
+        my="5"
+      >
+        <Link
+          _hover={{ color: "rgba(255,255,255,.6)" }}
+          fontSize={"1.2rem"}
+          bg={"brand.bg"}
+          color={"white"}
+          display={"flex"}
+          gap="2"
+          px="4"
+          alignItems={"center"}
+          rounded={"md"}
+          py="2"
+          className="twitter-follow-button"
+          href="https://twitter.com/jefperf"
+        >
+         <FaXTwitter /> Follow on Twitter
+        </Link>
+        <Link
+          _hover={{ color: "rgba(255,255,255,.6)" }}
+          fontSize={"1.2rem"}
+          // bg={"brand.bg"}
+          border="1px solid"
+          borderColor={"brand.100"}
+          color={"brand.100"}
+          display={"flex"}
+          gap="2"
+          px="4"
+          alignItems={"center"}
+          rounded={"md"}
+          py="2"
+          href="https://twitter.com/intent/like?tweet_id=463440424141459456"
+          target="blank"
+        >
+          <FaXTwitter /> Like on Twitter
+        </Link>
 
-      <Stack direction="row" spacing={4} align="center">
-        <Button colorScheme="teal" variant="link">
-          <a class="twitter-follow-button" href="https://twitter.com/jefperf">
-            Follow
-          </a>
-        </Button>
-        <Button colorScheme="teal" variant="solid">
-          <a
-            href="https://twitter.com/intent/like?tweet_id=463440424141459456"
-            target="blank"
-          >
-            Like
-          </a>
-        </Button>
-        <Button colorScheme="teal" variant="outline">
-          <a href="https://twitter.com/intent/retweet?tweet_id=463440424141459456">
-            Retweet
-          </a>
-        </Button>
-        <Button colorScheme="teal" variant="ghost">
-          <a href="https://twitter.com/intent/tweet?in_reply_to=463440424141459456">
-            Repost
-          </a>
-        </Button>
-      </Stack>
-    </Box>
+        <Link
+          _hover={{ opacity: ".6" }}
+          fontSize={"1.2rem"}
+          border="1px solid"
+          borderColor={"brand.bg"}
+          color={"brand.bg"}
+          display={"flex"}
+          gap="2"
+          px="4"
+          alignItems={"center"}
+          rounded={"md"}
+          py="2"
+          href="https://twitter.com/intent/retweet?tweet_id=463440424141459456"
+        >
+          <FaXTwitter /> Retweet
+        </Link>
+        <Link
+          _hover={{ color: "rgba(255,255,255,.6)" }}
+          fontSize={"1.2rem"}
+          bg={"brand.bg"}
+          color={"white"}
+          display={"flex"}
+          gap="2"
+          px="4"
+          alignItems={"center"}
+          rounded={"md"}
+          py="1"
+          href="https://twitter.com/intent/tweet?in_reply_to=463440424141459456"
+        >
+          Repost
+        </Link>
+      </Grid>
+      </Box>
+      <Box>
+        <Img src="/jumbo-bg.svg" w="full" alt="jumbo image" />
+      </Box>
+    </Flex>
   );
 }

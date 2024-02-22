@@ -1,4 +1,20 @@
-#root {
+
+.react-multi-carousel-track {
+  gap: 1.5rem;
+}
+.react-multiple-carousel__arrow:hover{
+  opacity: 1;
+}
+.react-multiple-carousel__arrow{
+  opacity: .5;
+} 
+.react-multiple-carousel__arrow--left{
+  left: .4rem;
+}
+.react-multiple-carousel__arrow--right{
+  right: .4rem;
+}
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -39,4 +55,4 @@
 
 .read-the-docs {
   color: #888;
-}
+} */

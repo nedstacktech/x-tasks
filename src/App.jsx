@@ -4,8 +4,12 @@ import viteLogo from "/vite.svg";
 import { Box, Container, Img } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Tasks from "./components/Tasks";
+import Posts from "./components/Posts";
+
 
 import "./App.css";
+import Faq from "./components/Faq";
+// import Posts from "./components/Posts";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,6 +27,8 @@ function App() {
     >
       <Navbar />
       <Tasks />
+      <Posts />
+      <Faq />
     </Container>
   );
 }
