@@ -9,6 +9,7 @@ import Posts from "./components/Posts";
 
 import "./App.css";
 import Faq from "./components/Faq";
+import Test from "./components/Test";
 // import Posts from "./components/Posts";
 
 function App() {
@@ -25,7 +26,9 @@ function App() {
       // bgSize={"cover"}
       // overflow={"hidden"}
     >
+      
       <Navbar />
+      <Test />
       <Tasks />
       <Posts />
       <Faq />
