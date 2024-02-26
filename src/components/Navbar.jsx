@@ -10,7 +10,7 @@ import {
   keyframes,
   Spacer,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   FaDiscord,
@@ -19,7 +19,11 @@ import {
   FaTelegram,
   FaTwitter,
   FaYoutube,
+  FaTimes,
 } from "react-icons/fa";
+import io from "socket.io-client";
+const API_URL = "http://localhost:3000";
+const socket = io(API_URL);
 
 const animationKeyframes = keyframes`
   0% { transform: scale(1) rotate(0); border-radius: 20%; }
@@ -31,6 +35,53 @@ const animation = `${animationKeyframes} 2s ease-in-out infinite`;
 
 export default function Navbar() {
   const [openNav, setOpenNav] = useState(false);
+  const [user, setUser] = useState({});
+  const [disabled, setDisabled] = useState("");
+  let popup = null;
+
+  useEffect(() => {
+    socket.on("user", (user) => {
+      console.log(popup);
+      popup.close();
+      setUser(user);
+    });
+  }, []);
+  const checkPopup = () => {
+    const check = setInterval(() => {
+      if (!popup || popup.closed || popup.closed === undefined) {
+        clearInterval(check);
+        setDisabled("");
+      }
+    }, 1000);
+  };
+  const openPopup = () => {
+    const width = 600,
+      height = 600;
+    const left = window.innerWidth / 2 - width / 2;
+    const top = window.innerHeight / 2 - height / 2;
+
+    const url = `${API_URL}/auth/twitter?socketId=${socket.id}`;
+console.log(url);
+    return window.open(
+      url,
+      "",
+      `toolbar=no, location=no, directories=no, status=no, menubar=no, 
+      scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
+      height=${height}, top=${top}, left=${left}`
+    );
+  };
+
+  const startAuth = () => {
+    if (!disabled) {
+      popup = openPopup();
+      checkPopup();
+      setDisabled("disabled");
+    }
+  };
+  const closeCard = () => {
+    setUser({});
+  };
+
   return (
     <Box>
       <Flex
@@ -155,23 +206,31 @@ export default function Navbar() {
           >
             X
           </Text>
-
-          <Link
-            href="#about"
-            _hover={{ color: "rgba(255,255,255,.6)" }}
-            fontSize={"1.2rem"}
-            bg={"brand.bg"}
-            color={"white"}
-            display={"flex"}
-            gap="2"
-            px="4"
-            alignItems={"center"}
-            rounded={"md"}
-            py="1"
-            fontWeight={"semibold"}
-          >
-            <FaSignInAlt /> Login
-          </Link>
+          {user.name ? (
+            <div className={"card"}>
+              <img src={user.photo} alt={user.name} />
+              <FaTimes className={"close"} onClick={closeCard} />
+              <h4>{`@${user.name}`}</h4>
+            </div>
+          ) : (
+            <Button
+              _hover={{ opacity: ".7" }}
+              fontSize={"1.2rem"}
+              bg={"brand.bg"}
+              color={"white"}
+              display={"flex"}
+              gap="2"
+              px="4"
+              alignItems={"center"}
+              rounded={"md"}
+              py="1"
+              fontWeight={"semibold"}
+              onClick={startAuth}
+              className={`twitter ${disabled}`}
+            >
+              <FaSignInAlt /> Login
+            </Button>
+          )}
         </Flex>
       </Flex>
     </Box>

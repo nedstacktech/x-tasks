@@ -8,13 +8,20 @@ import {
   Img,
   Grid,
 } from "@chakra-ui/react";
-
+import axios from 'axios';
 import React from "react";
 import {FaXTwitter} from "react-icons/fa6";
 export default function Tasks({ title, isCentered }) {
-  const handleClick = () => {
-    window.open("http://localhost:3000/auth/twitter/callback", "_self");
-  }
+  const handleLogin = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/auth/twitter');
+      console.log(response);
+      // setAuthenticated(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Flex maxW="75rem" mx="auto" py="3rem" justifyContent={"space-between"}>
       {/* <h1>Current tasks</h1> */}
@@ -49,7 +56,7 @@ export default function Tasks({ title, isCentered }) {
         my="5"
       >
        {/* <form action="http://localhost:3000/auth/twitter"> */}
-        <button type="submit" onClick={handleClick}>Connect</button>
+        <button type="submit" onClick={handleLogin}>Connect</button>
        {/* </form> */}
         <Link
           _hover={{ color: "rgba(255,255,255,.6)" }}

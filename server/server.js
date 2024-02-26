@@ -1,9 +1,14 @@
 const express = require("express");
+const http = require("http");
 const passport = require("passport");
 const session = require("express-session");
 const cors = require("cors");
+const socketio = require("socket.io");
 const { Strategy } = require("@superfaceai/passport-twitter-oauth2");
 require("dotenv").config();
+
+const app = express();
+const server = http.createServer(app);
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -30,21 +35,37 @@ passport.use(
   )
 );
 
-const app = express();
 
+
+const io = socketio(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+});
 // <4> Passport and session middleware initialization
 app.use(passport.initialize());
 app.use(
   session({ secret: "keyboardcat", resave: true, saveUninitialized: true })
 );
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST"],
+//   })
+// );
+
+let se = "";
+const addSocketIdToSession = (req, res, next) => {
+  console.log(req.query.socketId);
+  se = req.query.socketId;
+  req.session.socketId = req.query.socketId;
+  next();
+};
 // <5> Start authentication flow
 app.get(
   "/auth/twitter",
+  addSocketIdToSession,
   passport.authenticate("twitter", {
     // <6> Scopes
     scope: ["tweet.read", "users.read", "offline.access"],
@@ -56,10 +77,19 @@ app.get("/auth/twitter/callback", passport.authenticate("twitter"), function (
   req,
   res
 ) {
-  const userData = JSON.stringify(req.user, undefined, 2);
-  res.end(
-    `<h1>Authentication succeeded</h1> User data: <pre>${userData}</pre>`
-  );
+  // const userData = JSON.stringify(req.user, undefined, 2);
+  // res.redirect("/");
+  // res.sendFile(userData);
+  const user = {
+    name: req.user.username,
+    photo: req.user.photos[0].value.replace(/_normal/, ""),
+  };
+  // io.in(req.session.socketId).emit('twitter', user)
+  // res.end()
+  io.in(se).emit("user", user);
+  console.log(se);
+  // res.redirect("/");
+  res.end();
 });
 
 app.listen(3000, () => {
