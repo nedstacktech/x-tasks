@@ -23,7 +23,7 @@ import {
 } from "react-icons/fa";
 import io from "socket.io-client";
 const API_URL = "http://localhost:3000";
-const socket = io(API_URL);
+const socket = io.connect(API_URL);
 
 const animationKeyframes = keyframes`
   0% { transform: scale(1) rotate(0); border-radius: 20%; }
@@ -41,7 +41,7 @@ export default function Navbar() {
 
   useEffect(() => {
     socket.on("user", (user) => {
-      console.log(popup);
+      console.log(user);
       popup.close();
       setUser(user);
     });
@@ -59,7 +59,7 @@ export default function Navbar() {
       height = 600;
     const left = window.innerWidth / 2 - width / 2;
     const top = window.innerHeight / 2 - height / 2;
-
+console.log(socket.id);
     const url = `${API_URL}/auth/twitter?socketId=${socket.id}`;
 console.log(url);
     return window.open(
@@ -88,26 +88,24 @@ console.log(url);
         as="nav"
         alignItems={"center"}
         // px="2rem"
-        py=".5rem"
-        maxW="75rem"
+        px="6"
+        py="4"
+        maxW="70rem"
         mx="auto"
         justifyContent={"space-between"}
         w="full"
         // color="#f2ca2b"
       >
-        <Flex alignItems={""} gap="2">
-          {/* <Box as={motion.div} animation={animation}>
-            <Img src="img/egg-2.png" w="clamp(3rem, 7vw, 5rem)" />
-          </Box> */}
-          <Heading
-            fontFamily={"'Mogra', cursive;"}
-            fontSize={"1.2rem"}
-            color="brand.100"
-          >
-            $Bridge Token
-          </Heading>
+        <Flex alignItems={"center"} gap="2">
+          <Flex as={motion.div} alignItems='center' gap="2">
+            <Img  src="images/logo.png" w="clamp(1.5rem, 5vw, 3rem)" />
+            <Img  src="images/bridge2.png" w="clamp(4rem, 8vw, 6rem)" />
+          </Flex>
         </Flex>
-        <Flex gap={"2"}>
+        <Box  color="white" fontWeight="bold" fontFamily="'Play', sans-serif" >
+          <Text mr="1" fontSize="2rem" as="span">0</Text>Bridge pts.
+        </Box>
+        {/* <Flex gap={"2"}>
           <Button
             bg="brand.bg"
             color={"white"}
@@ -168,9 +166,9 @@ console.log(url);
           >
             <FaTelegram />
           </Button>
-        </Flex>
+        </Flex> */}
         {/* <Spacer /> */}
-        <Button
+        {/* <Button
           bg="transparent"
           gap=".2rem"
           flexDir={"column"}
@@ -217,7 +215,7 @@ console.log(url);
               _hover={{ opacity: ".7" }}
               fontSize={"1.2rem"}
               bg={"brand.bg"}
-              color={"white"}
+              color={"brand.900"}
               display={"flex"}
               gap="2"
               px="4"
@@ -231,7 +229,8 @@ console.log(url);
               <FaSignInAlt /> Login
             </Button>
           )}
-        </Flex>
+        </Flex> */}
+        
       </Flex>
     </Box>
   );

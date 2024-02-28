@@ -49,7 +49,7 @@ const faqs = [
 
 function Faq() {
   return (
-    <Box maxW="75rem" mx="auto" my="10">
+    <Box maxW="70rem" px="6" mx="auto" my="10">
       <Heading
         as="h3"
         mb="8"

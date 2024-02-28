@@ -19,13 +19,13 @@ require("dotenv").config();
 // Create the server and allow express and socketio to run on the same port
 const app = express();
 const server = http.createServer(app);
-// const io = socketio(server)
-const io = socketio(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-  },
-});
+const io = socketio(server);
+// const io = socketio(server, {
+//   cors: {
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST"],
+//   },
+// });
 // Allows the application to accept JSON and use passport
 app.use(express.json());
 app.use(passport.initialize());
@@ -47,7 +47,12 @@ app.use(
     saveUninitialized: true,
   })
 );
-
+io.on("connection", (socket) => {
+  console.log(`⚡: ${socket.id} user just connected!`);
+  socket.on("disconnect", () => {
+    console.log("🔥: A user disconnected");
+  });
+});
 // allows us to save the user into the session
 passport.serializeUser((user, cb) => cb(null, user));
 passport.deserializeUser((obj, cb) => cb(null, obj));
@@ -118,7 +123,7 @@ app.get(
     // io.in(req.session.socketId).emit('twitter', user)
     // res.end()
     io.in(se).emit("user", user);
-    console.log(se);
+    // alert(user);
     // res.redirect("/");
   }
 );

@@ -1,15 +1,14 @@
-const express = require("express");
+const express = require('express');
+const passport = require('passport');
+const { Strategy } = require('@superfaceai/passport-twitter-oauth2');
+const session = require('express-session');
 const http = require("http");
-const passport = require("passport");
-const session = require("express-session");
-const cors = require("cors");
-const socketio = require("socket.io");
-const { Strategy } = require("@superfaceai/passport-twitter-oauth2");
-require("dotenv").config();
+// const socketio = require("socket.io");
+require('dotenv').config();
 
-const app = express();
-const server = http.createServer(app);
 
+
+// <1> Serialization and deserialization
 passport.serializeUser(function (user, done) {
   done(null, user);
 });
@@ -24,73 +23,55 @@ passport.use(
     {
       clientID: process.env.TWITTER_CLIENT_ID,
       clientSecret: process.env.TWITTER_CLIENT_SECRET,
-      clientType: "confidential",
+      clientType: 'confidential',
       callbackURL: `${process.env.BASE_URL}/auth/twitter/callback`,
     },
     // <3> Verify callback
     (accessToken, refreshToken, profile, done) => {
-      console.log("Success!", { accessToken, refreshToken });
+      console.log('Success!', { accessToken, refreshToken });
       return done(null, profile);
     }
   )
 );
 
+const app = express();
+// const server = http.createServer(app);
+// const io = socketio(server);
 
 
-const io = socketio(server, {
-  cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-  },
-});
 // <4> Passport and session middleware initialization
 app.use(passport.initialize());
 app.use(
-  session({ secret: "keyboardcat", resave: true, saveUninitialized: true })
+  session({ secret: 'keyboard cat', resave: false, saveUninitialized: true })
 );
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000",
-//     methods: ["GET", "POST"],
-//   })
-// );
 
-let se = "";
-const addSocketIdToSession = (req, res, next) => {
-  console.log(req.query.socketId);
-  se = req.query.socketId;
-  req.session.socketId = req.query.socketId;
-  next();
-};
+// const addSocketIdToSession = (req, res, next) => {
+//   // se = req.query.socketId;
+//   // console.log(se);
+//   req.session.socketId = req.query.socketId;
+//   next();
+// };
+
 // <5> Start authentication flow
 app.get(
-  "/auth/twitter",
-  addSocketIdToSession,
-  passport.authenticate("twitter", {
+  '/auth/twitter',
+  passport.authenticate('twitter', {
     // <6> Scopes
-    scope: ["tweet.read", "users.read", "offline.access"],
+    scope: ['tweet.read', 'users.read', 'offline.access'],
   })
 );
 
 // <7> Callback handler
-app.get("/auth/twitter/callback", passport.authenticate("twitter"), function (
-  req,
-  res
-) {
-  // const userData = JSON.stringify(req.user, undefined, 2);
-  // res.redirect("/");
-  // res.sendFile(userData);
-  const user = {
-    name: req.user.username,
-    photo: req.user.photos[0].value.replace(/_normal/, ""),
-  };
-  // io.in(req.session.socketId).emit('twitter', user)
-  // res.end()
-  io.in(se).emit("user", user);
-  console.log(se);
-  // res.redirect("/");
-  res.end();
-});
+app.get(
+  '/auth/twitter/callback',
+  passport.authenticate('twitter'),
+  function (req, res) {
+    const userData = JSON.stringify(req.user, undefined, 2);
+    res.end(
+      `<h1>Authentication succeeded</h1> User data: <pre>${userData}</pre>`
+    );
+  }
+);
 
 app.listen(3000, () => {
   console.log(`Listening on ${process.env.BASE_URL}`);
