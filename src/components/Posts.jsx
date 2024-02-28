@@ -22,7 +22,7 @@ const responsive = {
 };
 function Posts() {
   return (
-    <Box bg="#ddd" py="10">
+    <Box bg="#ddd" py="10" px="6">
     <Box maxW="70rem" mx="auto" >
       <Heading as="h3" fontSize={"1.5rem"} mb="8">Engage with our past Twitter Posts</Heading>
       <Carousel

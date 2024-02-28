@@ -14,7 +14,7 @@ import React, { useState, useEffect } from "react";
 import { FaXTwitter } from "react-icons/fa6";
 import io from "socket.io-client";
 const API_URL = "http://localhost:3000";
-const socket = io.connect(API_URL);
+const socket = io(API_URL);
 export default function Tasks({ title, isCentered }) {
   const [openNav, setOpenNav] = useState(false);
   const [user, setUser] = useState({});

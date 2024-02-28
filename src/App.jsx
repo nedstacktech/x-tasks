@@ -9,6 +9,7 @@ import Posts from "./components/Posts";
 import "./App.css";
 import Faq from "./components/Faq";
 import Test from "./components/Test";
+import Footer from "./components/Footer"
 // import Posts from "./components/Posts";
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
       </Box>
       <Posts />
       <Faq />
+      <Footer />
     </Container>
   );
 }

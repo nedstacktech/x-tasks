@@ -3,7 +3,7 @@ const passport = require('passport');
 const { Strategy } = require('@superfaceai/passport-twitter-oauth2');
 const session = require('express-session');
 const http = require("http");
-// const socketio = require("socket.io");
+const {Server} = require("socket.io");
 require('dotenv').config();
 
 
@@ -35,9 +35,12 @@ passport.use(
 );
 
 const app = express();
-// const server = http.createServer(app);
-// const io = socketio(server);
+const server = http.createServer(app);
+const io = new Server(server);
 
+io.on("connection", (socket) => {
+  console.log("User connected");
+})
 
 // <4> Passport and session middleware initialization
 app.use(passport.initialize());
