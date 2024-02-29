@@ -5,7 +5,7 @@ const app = express();
 const oauth = require('oauth')
 const consumer = new oauth.OAuth(
     "https://twitter.com/oauth/request_token", "https://twitter.com/oauth/access_token", 
-    process.env.consumerKey, process.env.consumerSecret, "1.0A", "http://127.0.0.1:3000/auth-page", "HMAC-SHA1");
+    process.env.consumerKey, process.env.consumerSecret, "1.0A", "http://localhost:3000/auth-page", "HMAC-SHA1");
 
 app.use(cors());
 
@@ -62,7 +62,7 @@ app.get(
 
 })
 
-app.listen(process.env.PORT || 8080, () => {
+app.listen(3000, () => {
   console.log('listening at port 8080');
 });
 module.exports = app;

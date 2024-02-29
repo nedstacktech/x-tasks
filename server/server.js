@@ -2,8 +2,9 @@ const express = require('express');
 const passport = require('passport');
 const { Strategy } = require('@superfaceai/passport-twitter-oauth2');
 const session = require('express-session');
-const http = require("http");
+const {createServer} = require("node:http");
 const {Server} = require("socket.io");
+const cors = require('cors');
 require('dotenv').config();
 
 
@@ -35,29 +36,36 @@ passport.use(
 );
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
-io.on("connection", (socket) => {
-  console.log("User connected");
-})
+const server = createServer(app);
+app.use(cors())
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST"],
+  }
+});
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
 
 // <4> Passport and session middleware initialization
 app.use(passport.initialize());
 app.use(
   session({ secret: 'keyboard cat', resave: false, saveUninitialized: true })
 );
-
-// const addSocketIdToSession = (req, res, next) => {
-//   // se = req.query.socketId;
-//   // console.log(se);
-//   req.session.socketId = req.query.socketId;
-//   next();
-// };
+let sid = ''
+const addSocketIdToSession = (req, res, next) => {
+  // se = req.query.socketId;
+  sid = req.query.socketId;
+  next();
+};
 
 // <5> Start authentication flow
+app.get('/', (req, res) => {
+  res.send("<h1>Nice</h1>")
+})
 app.get(
-  '/auth/twitter',
+  '/auth/twitter', addSocketIdToSession,
   passport.authenticate('twitter', {
     // <6> Scopes
     scope: ['tweet.read', 'users.read', 'offline.access'],
@@ -69,13 +77,23 @@ app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter'),
   function (req, res) {
-    const userData = JSON.stringify(req.user, undefined, 2);
-    res.end(
-      `<h1>Authentication succeeded</h1> User data: <pre>${userData}</pre>`
-    );
+    // const userData = JSON.stringify(req.user, undefined, 2);
+    // res.end(
+    //   `<h1>Authentication succeeded</h1> User data: <pre>${userData}</pre>`
+    // );
+    const user = {
+      name: req.user.username,
+      photo: req.user.photos[0].value.replace(/_normal/, ""),
+    };
+  console.log(req.session.socketId);
+
+    // io.in(req.session.socketId).emit('twitter', user)
+    io.in(sid).emit("user", user);
+
+    res.send("<script>window.close()</script>")
   }
 );
 
-app.listen(3000, () => {
+server.listen(3000, () => {
   console.log(`Listening on ${process.env.BASE_URL}`);
 });
