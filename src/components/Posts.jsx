@@ -17,7 +17,7 @@ const responsive = {
   mobile: {
     breakpoint: { max: 464, min: 0 },
     items: 1,
-    // slidesToSlide: 1, // optional, default to 1.
+    slidesToSlide: 1, // optional, default to 1.
   },
 };
 function Posts() {
@@ -27,20 +27,19 @@ function Posts() {
       <Heading as="h3" fontSize={"1.5rem"} mb="8">Engage with our past Twitter Posts</Heading>
       <Carousel
         swipeable={true}
-        // draggable={false}
-        // showDots={true}
+//         // draggable={false}
+//         // showDots={true}
         responsive={responsive}
         ssr={true} // means to render carousel on server-side.
-        infinite={true}
-
+infinite={true}
         keyBoardControl={true}
-        customTransition="all .5"
-        transitionDuration={500}
-        containerClass="carousel-container"
-        removeArrowOnDeviceType={["tablet", "mobile"]}
-        // deviceType={this.props.deviceType}
-        dotListClass="custom-dot-list-style"
-        itemClass="carousel-item-padding-40-px"
+        customTransition="all .5s"
+        transitionDuration={'500ms'}
+//         containerClass="carousel-container"
+//         // removeArrowOnDeviceType={["tablet", "mobile"]}
+//         // deviceType={this.props.deviceType}
+//         // dotListClass="custom-dot-list-style"
+//         itemClass="carousel-item-padding-40-px"
       >
         {[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
           <Box bg="grey" py="6" key={index} px="6" rounded="lg" shadow={"md"}>
@@ -54,7 +53,7 @@ function Posts() {
         ))}
         {/* </Skeleton> */}
       </Carousel>
-      ;
+      
     </Box>
     </Box>
   );
