@@ -1,27 +1,46 @@
-import { useState, createContext } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useState, createContext, useEffect } from "react";
 import { Box, Container, Img } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Tasks from "./components/Tasks";
 import Posts from "./components/Posts";
-
+import axios from "axios";
 import "./App.css";
 import Faq from "./components/Faq";
-import Test from "./components/Test";
+// import Test from "./components/Test";
 import Footer from "./components/Footer";
 // import Posts from "./components/Posts";
 import { io } from "socket.io-client";
-const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:5000";
 const socket = io(API_URL);
+socket.on("connect", (socket) => {
+  console.log(socket);
+});
 
 export const AppContext = createContext({ socket: socket, API_URL: API_URL });
 function App() {
   const [user, setUser] = useState({});
+  const [score, setScore] = useState(0);
+  // useEffect(() => {
+  //   const f = async () => {
+  //     const response = await fetch("http://localhost:5000/profile", {
+  //       'Content-Type': 'application/json',
+
+  //     });
+  //     console.log(response);
+  //   }
+  //   // f();
+  // }, []);
 
   return (
     <AppContext.Provider
-      value={{ socket: socket, API_URL: API_URL, user: user, setUser: setUser }}
+      value={{
+        socket: socket,
+        API_URL: API_URL,
+        user: user,
+        setUser: setUser,
+        score: score,
+        setScore: setScore,
+      }}
     >
       <Container
         maxW={"unset"}
@@ -49,7 +68,7 @@ function App() {
           />
 
           <Navbar />
-          <Test />
+          {/* <Test /> */}
           <Tasks />
         </Box>
         <Posts />

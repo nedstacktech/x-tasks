@@ -34,7 +34,7 @@ const animation = `${animationKeyframes} 2s ease-in-out infinite`;
 export default function Navbar() {
   const [openNav, setOpenNav] = useState(false);
 
-  const { user } = useContext(AppContext);
+  const { user, score } = useContext(AppContext);
   console.log(user);
   return (
     <Box>
@@ -59,7 +59,7 @@ export default function Navbar() {
         <Flex alignItems="center" gap="2">
           <Box color="white" fontWeight="bold" fontFamily="'Play', sans-serif">
             <Text mr="1" fontSize="2rem" as="span">
-              0
+              {score}
             </Text>
             Bridge pts.
           </Box>
@@ -74,6 +74,7 @@ export default function Navbar() {
               />
             </Box>
           )}
+          {!user.length ? <Button>Log In</Button> : <Button>Log Out</Button>}
         </Flex>
       </Flex>
     </Box>

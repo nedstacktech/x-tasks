@@ -18,7 +18,9 @@ export default function Tasks({ title, isCentered }) {
   const [openNav, setOpenNav] = useState(false);
   const [disabled, setDisabled] = useState("");
   let popup = null;
-  const { socket, API_URL, user, setUser } = useContext(AppContext);
+  const { socket, API_URL, user, setUser, score, setScore } = useContext(
+    AppContext
+  );
 
   useEffect(() => {
     socket.on("user", (user) => {
@@ -58,7 +60,9 @@ export default function Tasks({ title, isCentered }) {
       setDisabled("disabled");
     }
   };
-
+  const incrementScore = () => {
+    setScore((prevScore) => prevScore + 2);
+  };
   return (
     <Flex
       maxW="65rem"
@@ -75,7 +79,6 @@ export default function Tasks({ title, isCentered }) {
         src="https://platform.twitter.com/widgets.js"
       ></script>
       <Box w={{ md: "40%" }}>
-
         <Heading
           as="h2"
           fontSize={"4rem"}
@@ -107,18 +110,14 @@ export default function Tasks({ title, isCentered }) {
         >
           Earn rewards for engaging.
         </Text>
-        <Grid
-          // gridTemplateColumns={"1fr"}
-          // gridTemplateColumns={"repeat(2,1fr)"}
-          // fontWeight={"semibold"}
-          gap="4"
-          my="5"
-        >
+        {user.name && (
           <Button
             display="flex"
             alignItems="center"
             gap="2"
             py="6"
+            w="full"
+            mt="4"
             fontSize="1.5rem"
             onClick={startAuth}
             boxShadow={"5px 5px 3px rgba(200,200,200,.8)"}
@@ -128,76 +127,90 @@ export default function Tasks({ title, isCentered }) {
           >
             <FaXTwitter mr="2" /> Connect
           </Button>
-          {/* <form action="http://localhost:3000/auth/twitter"> */}
-          {/* <button type="submit" onClick={handleLogin}>Connect</button> */}
-          {/* </form> */}
-          {/* <Link
-          _hover={{ color: "rgba(255,255,255,.6)" }}
-          fontSize={"1.2rem"}
-          bg={"brand.bg"}
-          color={"white"}
-          display={"flex"}
-          gap="2"
-          px="4"
-          alignItems={"center"}
-          rounded={"md"}
-          py="2"
-          className="twitter-follow-button"
-          href="https://twitter.com/jefperf"
+        )}
+        {/* {user.name && ( */}
+        <Grid
+          gridTemplateColumns={"repeat(2,1fr)"}
+          fontWeight={"semibold"}
+          gap="4"
+          my="5"
         >
-         <FaXTwitter /> Follow on Twitter
-        </Link>
-        <Link
-          _hover={{ color: "rgba(255,255,255,.6)" }}
-          fontSize={"1.2rem"}
-          // bg={"brand.bg"}
-          border="1px solid"
-          borderColor={"brand.100"}
-          color={"brand.100"}
-          display={"flex"}
-          gap="2"
-          px="4"
-          alignItems={"center"}
-          rounded={"md"}
-          py="2"
-          href="https://twitter.com/intent/like?tweet_id=463440424141459456"
-          target="blank"
-        >
-          <FaXTwitter /> Like on Twitter
-        </Link>
-
-        <Link
-          _hover={{ opacity: ".6" }}
-          fontSize={"1.2rem"}
-          border="1px solid"
-          borderColor={"brand.bg"}
-          color={"brand.bg"}
-          display={"flex"}
-          gap="2"
-          px="4"
-          alignItems={"center"}
-          rounded={"md"}
-          py="2"
-          href="https://twitter.com/intent/retweet?tweet_id=463440424141459456"
-        >
-          <FaXTwitter /> Retweet
-        </Link>
-        <Link
-          _hover={{ color: "rgba(255,255,255,.6)" }}
-          fontSize={"1.2rem"}
-          bg={"brand.bg"}
-          color={"white"}
-          display={"flex"}
-          gap="2"
-          px="4"
-          alignItems={"center"}
-          rounded={"md"}
-          py="1"
-          href="https://twitter.com/intent/tweet?in_reply_to=463440424141459456"
-        >
-          Repost
-        </Link> */}
+          <Link
+            _hover={{ color: "rgba(255,255,255,.6)" }}
+            fontSize={"1.2rem"}
+            bg={"brand.bg"}
+            color={"white"}
+            display={"flex"}
+            gap="2"
+            px="4"
+            data-show-count="false"
+            alignItems={"center"}
+            rounded={"md"}
+            data-show-screen-name="false"
+            py="2"
+            target="_blank"
+            // className="twitter-follow-button"
+            onClick={incrementScore}
+            href="https://twitter.com/jefperf?ref_src=twsrc%5Etfw"
+          >
+            <FaXTwitter /> Follow @jefperf
+          </Link>
+          <Link
+            _hover={{ color: "rgba(255,255,255,.6)" }}
+            fontSize={"1.2rem"}
+            // bg={"brand.bg"}
+            border="1px solid"
+            borderColor={"brand.100"}
+            color={"brand.100"}
+            display={"flex"}
+            gap="2"
+            px="4"
+            alignItems={"center"}
+            rounded={"md"}
+            py="2"
+            onClick={incrementScore}
+            href="https://twitter.com/intent/like?tweet_id=463440424141459456"
+            target="_blank"
+          >
+            <FaXTwitter /> Like on Twitter
+          </Link>
+          <Link
+            _hover={{ opacity: ".6" }}
+            fontSize={"1.2rem"}
+            border="1px solid"
+            borderColor={"brand.bg"}
+            color={"brand.bg"}
+            display={"flex"}
+            gap="2"
+            px="4"
+            alignItems={"center"}
+            rounded={"md"}
+            py="2"
+            target="_blank"
+            onClick={incrementScore}
+            href="https://twitter.com/intent/retweet?tweet_id=463440424141459456"
+          >
+            <FaXTwitter /> Retweet
+          </Link>
+          <Link
+            _hover={{ color: "rgba(255,255,255,.6)" }}
+            fontSize={"1.2rem"}
+            bg={"brand.bg"}
+            color={"white"}
+            display={"flex"}
+            gap="2"
+            px="4"
+            alignItems={"center"}
+            rounded={"md"}
+            target="_blank"
+            py="1"
+            onClick={incrementScore}
+            href="https://twitter.com/intent/tweet?in_reply_to=463440424141459456"
+          >
+            Reply
+          </Link>
         </Grid>
+        {/* )} */}
       </Box>
       <Box
         w="45%"
